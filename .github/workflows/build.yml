@@ -1,0 +1,90 @@
+name: Build & Release
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: macos-latest
+            args: "--target aarch64-apple-darwin"
+            target: aarch64-apple-darwin
+          - platform: macos-latest
+            args: "--target x86_64-apple-darwin"
+            target: x86_64-apple-darwin
+          - platform: windows-latest
+            args: ""
+            target: x86_64-pc-windows-msvc
+
+    runs-on: ${{ matrix.platform }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+
+      - name: Rust cache
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: "./src-tauri -> target"
+
+      - name: Install frontend dependencies
+        run: npm ci
+
+      # Download FFmpeg binaries before building
+      - name: Download FFmpeg (macOS)
+        if: matrix.platform == 'macos-latest'
+        run: bash scripts/download-ffmpeg.sh
+
+      - name: Download FFmpeg (Windows)
+        if: matrix.platform == 'windows-latest'
+        shell: pwsh
+        run: pwsh -ExecutionPolicy Bypass -File scripts/download-ffmpeg.ps1
+
+      - name: Build Tauri app
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # macOS code signing (optional — set in repo secrets)
+          APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
+          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+          APPLE_SIGNING_IDENTITY: ${{ secrets.APPLE_SIGNING_IDENTITY }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+        with:
+          tagName: ${{ github.ref_name }}
+          releaseName: "AudioConvert ${{ github.ref_name }}"
+          releaseBody: |
+            ## AudioConvert ${{ github.ref_name }}
+
+            本地音频格式转换工具 — 完全离线，支持 30+ 格式，FFmpeg 已内置。
+
+            ### 下载安装
+            | 系统 | 文件 |
+            |------|------|
+            | macOS (Apple Silicon M1/M2/M3/M4) | `AudioConvert_*_aarch64.dmg` |
+            | macOS (Intel) | `AudioConvert_*_x64.dmg` |
+            | Windows | `AudioConvert_*_x64-setup.exe` |
+
+            - **macOS**：打开 `.dmg`，将 AudioConvert 拖入应用程序文件夹
+            - **Windows**：运行 `.exe` 安装向导
+            - **无需额外配置**，FFmpeg 已内置，开箱即用
+          releaseDraft: true
+          prerelease: false
+          args: ${{ matrix.args }}

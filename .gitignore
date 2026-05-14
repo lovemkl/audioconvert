@@ -1,0 +1,27 @@
+# Node
+node_modules/
+dist/
+dist-ssr/
+*.local
+
+# Tauri
+src-tauri/target/
+src-tauri/bin/*.exe
+src-tauri/bin/ffmpeg
+src-tauri/bin/ffprobe
+src-tauri/bin/ffmpeg-*
+src-tauri/bin/ffprobe-*
+
+# Editor
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# OS
+.DS_Store
+Thumbs.db
