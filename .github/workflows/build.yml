@@ -8,6 +8,8 @@ on:
 
 jobs:
   build:
+    permissions:
+      contents: write
     strategy:
       fail-fast: false
       matrix:
@@ -46,9 +48,20 @@ jobs:
       - name: Install frontend dependencies
         run: npm ci
 
+      # Inject Apple cert into env only when the secret is actually set.
+      # APPLE_CERTIFICATE must be absent (not just empty) so Tauri's Rust bundler
+      # doesn't call `security import` with an invalid certificate.
+      - name: Set Apple signing env (macOS, only if cert secret is configured)
+        if: matrix.platform == 'macos-latest' && secrets.APPLE_CERTIFICATE != ''
+        run: |
+          echo "APPLE_CERTIFICATE=${{ secrets.APPLE_CERTIFICATE }}" >> $GITHUB_ENV
+          echo "APPLE_CERTIFICATE_PASSWORD=${{ secrets.APPLE_CERTIFICATE_PASSWORD }}" >> $GITHUB_ENV
+
       # Download FFmpeg binaries before building
       - name: Download FFmpeg (macOS)
         if: matrix.platform == 'macos-latest'
+        env:
+          FFMPEG_TARGET: ${{ matrix.target }}
         run: bash scripts/download-ffmpeg.sh
 
       - name: Download FFmpeg (Windows)
@@ -60,10 +73,9 @@ jobs:
         uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # macOS code signing (optional — set in repo secrets)
-          APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
-          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
-          APPLE_SIGNING_IDENTITY: ${{ secrets.APPLE_SIGNING_IDENTITY }}
+          # macOS code signing — only inject cert vars when secrets are configured
+          # APPLE_CERTIFICATE is intentionally absent here; see "Set Apple env" step above
+          APPLE_SIGNING_IDENTITY: ${{ secrets.APPLE_SIGNING_IDENTITY || '-' }}
           APPLE_ID: ${{ secrets.APPLE_ID }}
           APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}

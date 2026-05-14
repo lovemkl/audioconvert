@@ -30,7 +30,9 @@ if [[ "$OS" == "Darwin" ]]; then
   rm -rf "$TMP"
 
   # Tauri sidecar naming: <name>-<target-triple>
-  TRIPLE="$(rustc -vV 2>/dev/null | grep 'host:' | awk '{print $2}' || echo 'aarch64-apple-darwin')"
+  # In CI, FFMPEG_TARGET is set to matrix.target (e.g. x86_64-apple-darwin when
+  # cross-compiling from an arm64 runner). Fall back to host triple for local dev.
+  TRIPLE="${FFMPEG_TARGET:-$(rustc -vV 2>/dev/null | grep 'host:' | awk '{print $2}' || echo 'aarch64-apple-darwin')}"
   cp "$BIN_DIR/ffmpeg"  "$BIN_DIR/ffmpeg-${TRIPLE}"
   cp "$BIN_DIR/ffprobe" "$BIN_DIR/ffprobe-${TRIPLE}"
 
