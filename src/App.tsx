@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ipc } from "./lib/ipc";
-import type { AppSettings, WizardStep } from "./types";
+import type { AppSettings } from "./types";
 import WizardShell from "./components/wizard/WizardShell";
 import FirstRunDialog from "./components/ui/FirstRunDialog";
 import SettingsPanel from "./components/ui/SettingsPanel";
@@ -14,7 +14,6 @@ export default function App() {
   const [settings, setSettings] = useState<AppSettings | null>(null);
   const [modal, setModal] = useState<Modal>("none");
   const [showFirstRun, setShowFirstRun] = useState(false);
-  const [dark, setDark] = useState(false);
 
   // Load settings on mount
   useEffect(() => {
@@ -29,7 +28,6 @@ export default function App() {
       // Apply theme
       const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
       const isDark = s.theme === "dark" || (s.theme === "system" && prefersDark);
-      setDark(isDark);
       document.documentElement.classList.toggle("dark", isDark);
     });
   }, []);
@@ -51,7 +49,6 @@ export default function App() {
     i18n.changeLanguage(lang);
     const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
     const isDark = updated.theme === "dark" || (updated.theme === "system" && prefersDark);
-    setDark(isDark);
     document.documentElement.classList.toggle("dark", isDark);
     setModal("none");
   };

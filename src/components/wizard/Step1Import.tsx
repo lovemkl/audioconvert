@@ -5,7 +5,6 @@ import { open } from "@tauri-apps/plugin-dialog";
 import { ipc } from "../../lib/ipc";
 import { formatDuration, formatFileSize } from "../../lib/formats";
 import type { FileItem } from "../../types";
-import { v4 as uuid } from "uuid";
 
 interface Props {
   files: FileItem[];
@@ -34,7 +33,7 @@ export default function Step1Import({ files, onFilesChange, onNext }: Props) {
                 : meta.needs_plugin
                 ? "needs_plugin"
                 : "pending";
-              return { id: uuid(), meta, status, progress: 0 } as FileItem;
+              return { id: crypto.randomUUID(), meta, status, progress: 0 } as FileItem;
             } catch {
               return null;
             }
@@ -50,7 +49,7 @@ export default function Step1Import({ files, onFilesChange, onNext }: Props) {
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     noClick: true,
-    onDrop: (accepted) => addPaths(accepted.map((f) => f.path)),
+    onDrop: (accepted) => addPaths(accepted.map((f) => (f as unknown as File & { path: string }).path)),
   });
 
   const handleSelectFiles = async () => {
