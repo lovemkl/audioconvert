@@ -48,14 +48,20 @@ jobs:
       - name: Install frontend dependencies
         run: npm ci
 
-      # Inject Apple cert into env only when the secret is actually set.
-      # APPLE_CERTIFICATE must be absent (not just empty) so Tauri's Rust bundler
-      # doesn't call `security import` with an invalid certificate.
-      - name: Set Apple signing env (macOS, only if cert secret is configured)
-        if: matrix.platform == 'macos-latest' && secrets.APPLE_CERTIFICATE != ''
+      # Inject Apple cert into GITHUB_ENV only when the secret is actually set.
+      # APPLE_CERTIFICATE must be absent (not just empty) — an empty env var still
+      # satisfies Rust's env::var() Ok(), causing Tauri to call `security import`
+      # with an invalid cert. The secrets context is read via env: (allowed there).
+      - name: Set Apple signing env (macOS)
+        if: matrix.platform == 'macos-latest'
+        env:
+          _CERT: ${{ secrets.APPLE_CERTIFICATE }}
+          _CERT_PWD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
         run: |
-          echo "APPLE_CERTIFICATE=${{ secrets.APPLE_CERTIFICATE }}" >> $GITHUB_ENV
-          echo "APPLE_CERTIFICATE_PASSWORD=${{ secrets.APPLE_CERTIFICATE_PASSWORD }}" >> $GITHUB_ENV
+          if [ -n "$_CERT" ]; then
+            echo "APPLE_CERTIFICATE=$_CERT" >> $GITHUB_ENV
+            echo "APPLE_CERTIFICATE_PASSWORD=$_CERT_PWD" >> $GITHUB_ENV
+          fi
 
       # Download FFmpeg binaries before building
       - name: Download FFmpeg (macOS)
