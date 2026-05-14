@@ -52,16 +52,25 @@ jobs:
       # APPLE_CERTIFICATE must be absent (not just empty) — an empty env var still
       # satisfies Rust's env::var() Ok(), causing Tauri to call `security import`
       # with an invalid cert. The secrets context is read via env: (allowed there).
+      # Inject Apple env vars only when secrets are actually set.
+      # Any Apple var set to empty string (even APPLE_TEAM_ID="") causes Tauri
+      # to attempt signing/notarization and then fail on validation.
       - name: Set Apple signing env (macOS)
         if: matrix.platform == 'macos-latest'
         env:
           _CERT: ${{ secrets.APPLE_CERTIFICATE }}
           _CERT_PWD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+          _IDENTITY: ${{ secrets.APPLE_SIGNING_IDENTITY }}
+          _APPLE_ID: ${{ secrets.APPLE_ID }}
+          _APPLE_PWD: ${{ secrets.APPLE_PASSWORD }}
+          _TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
         run: |
-          if [ -n "$_CERT" ]; then
-            echo "APPLE_CERTIFICATE=$_CERT" >> $GITHUB_ENV
-            echo "APPLE_CERTIFICATE_PASSWORD=$_CERT_PWD" >> $GITHUB_ENV
-          fi
+          [ -n "$_CERT" ]       && echo "APPLE_CERTIFICATE=$_CERT"                   >> $GITHUB_ENV || true
+          [ -n "$_CERT_PWD" ]   && echo "APPLE_CERTIFICATE_PASSWORD=$_CERT_PWD"      >> $GITHUB_ENV || true
+          [ -n "$_IDENTITY" ]   && echo "APPLE_SIGNING_IDENTITY=$_IDENTITY"          >> $GITHUB_ENV || true
+          [ -n "$_APPLE_ID" ]   && echo "APPLE_ID=$_APPLE_ID"                        >> $GITHUB_ENV || true
+          [ -n "$_APPLE_PWD" ]  && echo "APPLE_PASSWORD=$_APPLE_PWD"                 >> $GITHUB_ENV || true
+          [ -n "$_TEAM_ID" ]    && echo "APPLE_TEAM_ID=$_TEAM_ID"                    >> $GITHUB_ENV || true
 
       # Download FFmpeg binaries before building
       - name: Download FFmpeg (macOS)
@@ -79,12 +88,9 @@ jobs:
         uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # macOS code signing — only inject cert vars when secrets are configured
-          # APPLE_CERTIFICATE is intentionally absent here; see "Set Apple env" step above
-          APPLE_SIGNING_IDENTITY: ${{ secrets.APPLE_SIGNING_IDENTITY || '-' }}
-          APPLE_ID: ${{ secrets.APPLE_ID }}
-          APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
-          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          # Apple signing vars are injected via GITHUB_ENV in the step above,
+          # only when the secrets are actually configured. Do NOT set them here —
+          # even an empty string triggers Tauri's signing/notarization pipeline.
         with:
           tagName: ${{ github.ref_name }}
           releaseName: "AudioConvert ${{ github.ref_name }}"
