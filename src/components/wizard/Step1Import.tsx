@@ -84,13 +84,13 @@ export default function Step1Import({ files, onFilesChange, onNext }: Props) {
         {probing ? (
           <div className="flex flex-col items-center gap-2 text-[var(--text-muted)]">
             <div className="w-6 h-6 border-2 border-brand-500 border-t-transparent rounded-full animate-spin" />
-            <span className="text-sm">正在读取文件信息…</span>
+            <span className="text-sm">{t("probing")}</span>
           </div>
         ) : files.length === 0 ? (
           <>
             <MusicIcon />
             <p className="text-[var(--text-muted)] text-sm text-center px-4">
-              {isDragActive ? "松开以添加文件" : t("dropHere")}
+              {isDragActive ? t("dropActiveHint") : t("dropHere")}
             </p>
             <div className="flex gap-2 mt-1">
               <button className="btn-primary text-sm py-2 px-4" onClick={handleSelectFiles}>

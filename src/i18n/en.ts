@@ -57,6 +57,12 @@ export default {
     pluginDisclaimer:
       "This plugin decrypts music files you have legitimately purchased on streaming platforms for personal use on other devices. Please ensure you have legal rights to the files.",
     iUnderstand: "I understand, install",
+    failedFiles: "Failed files",
+    probing: "Reading file info…",
+    dropActiveHint: "Release to add files",
+    notSelected: "Not selected",
+    installing: "Installing…",
+    supports: "Supports: ",
     firstRunTitle: "Choose Output Directory",
     firstRunDesc:
       "Please choose where to save converted files. You can change this later in Settings.",

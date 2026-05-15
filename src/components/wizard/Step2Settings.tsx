@@ -86,7 +86,9 @@ export default function Step2Settings({
         </p>
         <div className="flex gap-2">
           {QUALITY_LEVELS.map((q) => {
-            const disabled = selectedFmt?.lossless && q !== "lossless";
+            // For lossless formats: only "lossless" is valid
+            // For lossy formats: "lossless" is invalid
+            const disabled = selectedFmt?.lossless ? q !== "lossless" : q === "lossless";
             const active = convertSettings.quality === q;
             return (
               <button

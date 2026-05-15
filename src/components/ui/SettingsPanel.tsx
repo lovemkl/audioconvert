@@ -14,8 +14,17 @@ export default function SettingsPanel({ settings, onSave, onClose }: Props) {
   const [draft, setDraft] = useState<AppSettings>({ ...settings });
 
   const pickDir = async () => {
-    const selected = await open({ directory: true, multiple: false });
-    if (selected) setDraft({ ...draft, output_dir: selected as string });
+    try {
+      const selected = await open({ directory: true, multiple: false });
+      if (typeof selected === "string" && selected.length > 0) {
+        setDraft({ ...draft, output_dir: selected });
+      } else if (Array.isArray(selected) && selected.length > 0) {
+        setDraft({ ...draft, output_dir: selected[0] });
+      }
+    } catch (e) {
+      console.error("Failed to open directory picker:", e);
+      alert("无法打开文件夹选择器，请检查应用权限。\nFailed to open folder picker.");
+    }
   };
 
   return (

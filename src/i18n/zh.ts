@@ -66,6 +66,13 @@ export default {
     pluginDisclaimer:
       "此插件用于解密您在音乐平台已购买的音乐文件，以便在其他设备上播放。请确保您对相关文件拥有合法使用权。",
     iUnderstand: "我已了解，继续安装",
+    // Step 3 / Result
+    failedFiles: "失败文件",
+    probing: "正在读取文件信息…",
+    dropActiveHint: "松开以添加文件",
+    notSelected: "未选择",
+    installing: "安装中…",
+    supports: "支持：",
     // First run
     firstRunTitle: "选择输出目录",
     firstRunDesc: "请选择转换后文件的保存位置，之后将自动使用此目录（可在设置中修改）",

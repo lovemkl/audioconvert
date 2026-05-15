@@ -15,7 +15,7 @@ export default function App() {
   const [modal, setModal] = useState<Modal>("none");
   const [showFirstRun, setShowFirstRun] = useState(false);
 
-  // Load settings on mount
+  // Load settings on mount — i18n is a stable singleton, omitting it is intentional
   useEffect(() => {
     ipc.getSettings().then((s) => {
       setSettings(s);
@@ -30,7 +30,8 @@ export default function App() {
       const isDark = s.theme === "dark" || (s.theme === "system" && prefersDark);
       document.documentElement.classList.toggle("dark", isDark);
     });
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // i18n is a stable singleton — intentionally omitted
 
   const handleFirstRunConfirm = async (outputDir: string) => {
     if (!settings) return;

@@ -109,6 +109,15 @@ jobs:
             - **macOS**：打开 `.dmg`，将 AudioConvert 拖入应用程序文件夹
             - **Windows**：运行 `.exe` 安装向导
             - **无需额外配置**，FFmpeg 已内置，开箱即用
+
+            ### macOS 提示：显示"文件已损坏"怎么办？
+            本应用暂未经 Apple 公证，macOS Gatekeeper 可能拦截。两种解决方法：
+
+            **方法一（推荐）**：在终端运行一行命令解除隔离标记
+            ```bash
+            xattr -dr com.apple.quarantine /Applications/AudioConvert.app
+            ```
+            **方法二**：系统设置 → 隐私与安全性 → 点击「仍然打开」
           releaseDraft: true
           prerelease: false
           args: ${{ matrix.args }}

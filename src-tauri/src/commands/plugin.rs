@@ -72,17 +72,19 @@ pub async fn install_plugin(plugin_id: String) -> Result<PluginInfo> {
     std::fs::create_dir_all(&dir)
         .map_err(|e| AppError::Plugin(format!("Cannot create plugins dir: {e}")))?;
 
-    // Download URL pattern – replace with actual release URL
-    let platform = if cfg!(target_os = "windows") {
-        "x86_64-windows"
-    } else if cfg!(target_arch = "aarch64") {
-        "aarch64-macos"
-    } else {
-        "x86_64-macos"
-    };
     let filename = plugin_binary_name(id);
+
+    // Build platform-specific download URL from the main repo's releases
+    let os_tag = if cfg!(target_os = "windows") {
+        "windows-x86_64"
+    } else if cfg!(target_arch = "aarch64") {
+        "macos-aarch64"
+    } else {
+        "macos-x86_64"
+    };
+    let ext = if cfg!(target_os = "windows") { ".exe" } else { "" };
     let url = format!(
-        "https://github.com/your-username/audioconvert-plugin-{id}/releases/latest/download/audioconvert-plugin-{id}-{platform}"
+        "https://github.com/ynzt2023/audioconvert/releases/latest/download/audioconvert-plugin-{id}-{os_tag}{ext}"
     );
 
     // Download the binary

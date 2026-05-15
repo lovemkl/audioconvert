@@ -25,8 +25,13 @@ export default function PluginCenter({ onClose }: Props) {
     try {
       const updated = await ipc.installPlugin(id);
       setPlugins((prev) => prev.map((p) => (p.id === id ? updated : p)));
-    } catch (e: any) {
-      setError(e?.message ?? String(e));
+    } catch (e: unknown) {
+      // Tauri AppError is serialised as {kind, message}; plain errors have .message
+      const err = e as Record<string, string> | string | undefined;
+      const msg: string =
+        typeof err === "string" ? err
+        : (err?.message ?? (err?.kind ? `${err.kind}: ${JSON.stringify(err)}` : JSON.stringify(err)));
+      setError(msg);
     } finally {
       setInstalling(null);
     }
@@ -51,7 +56,7 @@ export default function PluginCenter({ onClose }: Props) {
                 <div className="flex-1 min-w-0">
                   <p className="font-semibold text-sm">{plugin.name}</p>
                   <p className="text-xs text-[var(--text-muted)] mt-0.5">
-                    支持：{plugin.supported_extensions.slice(0, 6).join(", ")}
+                    {t("supports")}{plugin.supported_extensions.slice(0, 6).join(", ")}
                     {plugin.supported_extensions.length > 6 && " …"}
                   </p>
                 </div>
@@ -69,7 +74,7 @@ export default function PluginCenter({ onClose }: Props) {
                     {installing === plugin.id ? (
                       <span className="flex items-center gap-1">
                         <span className="w-3 h-3 border border-white border-t-transparent rounded-full animate-spin" />
-                        安装中…
+                        {t("installing")}
                       </span>
                     ) : t("install")}
                   </button>

@@ -11,8 +11,17 @@ export default function FirstRunDialog({ onConfirm }: Props) {
   const [dir, setDir] = useState("");
 
   const pickDir = async () => {
-    const selected = await open({ directory: true, multiple: false });
-    if (selected) setDir(selected as string);
+    try {
+      const selected = await open({ directory: true, multiple: false });
+      if (typeof selected === "string" && selected.length > 0) {
+        setDir(selected);
+      } else if (Array.isArray(selected) && selected.length > 0) {
+        setDir(selected[0]);
+      }
+    } catch (e) {
+      console.error("Failed to open directory picker:", e);
+      alert("无法打开文件夹选择器，请检查应用权限。\nFailed to open folder picker.");
+    }
   };
 
   return (
@@ -23,7 +32,7 @@ export default function FirstRunDialog({ onConfirm }: Props) {
         <div className="flex gap-2 mb-6">
           <div className="flex-1 px-3 py-2 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border)]
                           text-sm text-[var(--text-muted)] truncate">
-            {dir || "未选择"}
+            {dir || t("notSelected")}
           </div>
           <button className="btn-secondary text-sm shrink-0" onClick={pickDir}>
             {t("chooseDir")}

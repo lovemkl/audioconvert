@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { invoke } from "@tauri-apps/api/core";
+import { open as shellOpen } from "@tauri-apps/plugin-shell";
 import type { FileItem } from "../../types";
 import { formatFileSize } from "../../lib/formats";
 
@@ -13,14 +13,17 @@ export default function ResultPage({ files, onReset }: Props) {
   const succeeded = files.filter((f) => f.status === "done");
   const failed = files.filter((f) => f.status === "failed");
 
-  const outputDir = succeeded[0]?.outputPath
-    ? succeeded[0].outputPath.split("/").slice(0, -1).join("/") ||
-      succeeded[0].outputPath.split("\\").slice(0, -1).join("\\")
-    : null;
+  // Works on both macOS (/) and Windows (\)
+  const outputDir = (() => {
+    const p = succeeded[0]?.outputPath;
+    if (!p) return null;
+    const lastSlash = Math.max(p.lastIndexOf("/"), p.lastIndexOf("\\"));
+    return lastSlash > 0 ? p.slice(0, lastSlash) : null;
+  })();
 
   const openDir = async () => {
     if (outputDir) {
-      await invoke("plugin:opener|open_path", { path: outputDir }).catch(() => {});
+      await shellOpen(outputDir).catch(console.error);
     }
   };
 
@@ -43,7 +46,7 @@ export default function ResultPage({ files, onReset }: Props) {
       {/* Failed list */}
       {failed.length > 0 && (
         <div className="w-full max-w-lg card p-4">
-          <p className="text-sm font-semibold text-red-500 mb-2">失败文件</p>
+          <p className="text-sm font-semibold text-red-500 mb-2">{t("failedFiles")}</p>
           <div className="flex flex-col gap-1 max-h-40 overflow-y-auto">
             {failed.map((f) => (
               <div key={f.id} className="flex items-start gap-2 text-sm">

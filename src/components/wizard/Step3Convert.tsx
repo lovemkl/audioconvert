@@ -18,7 +18,8 @@ export default function Step3Convert({ files, convertSettings, onFilesChange, on
   const [cancelled, setCancelled] = useState(false);
   const jobMap = useRef<Map<string, string>>(new Map()); // jobId -> fileId
   const fileRef = useRef<FileItem[]>(files);
-  fileRef.current = files;
+  // Keep ref in sync with latest files prop (must be in effect, not during render)
+  useEffect(() => { fileRef.current = files; });
 
   const convertable = files.filter((f) => f.status !== "drm");
   const totalProgress = convertable.length === 0 ? 0
@@ -37,9 +38,11 @@ export default function Step3Convert({ files, convertSettings, onFilesChange, on
     const start = async () => {
       setStarted(true);
 
-      // Mark all convertable as queued
+      // Mark convertable files as queued; preserve drm/needs_plugin as-is
       onFilesChange(files.map((f) =>
-        f.status === "drm" ? f : { ...f, status: "queued" as FileStatus, progress: 0 }
+        (f.status === "drm" || f.status === "needs_plugin")
+          ? f
+          : { ...f, status: "queued" as FileStatus, progress: 0 }
       ));
 
       // Subscribe to events
@@ -57,9 +60,9 @@ export default function Step3Convert({ files, convertSettings, onFilesChange, on
         }
       });
 
-      // Build job list
+      // Build job list — exclude drm and needs_plugin files
       const jobFiles = files
-        .filter((f) => f.status !== "drm")
+        .filter((f) => f.status !== "drm" && f.status !== "needs_plugin")
         .map((f) => ({
           path: f.meta.path,
           duration_secs: f.meta.duration_secs,
@@ -86,17 +89,22 @@ export default function Step3Convert({ files, convertSettings, onFilesChange, on
       unlistenProgress?.();
       unlistenResult?.();
     };
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Intentionally run once on mount — conversion must not restart on re-render
 
-  // Auto-advance to result when all done
+  // Auto-advance to result when all convertable jobs are done
   useEffect(() => {
     if (!started) return;
-    const active = files.filter((f) => f.status !== "drm");
-    const allSettled = active.every((f) => f.status === "done" || f.status === "failed");
-    if (allSettled && active.length > 0) {
+    const convertable = files.filter(
+      (f) => f.status !== "drm" && f.status !== "needs_plugin" && f.status !== "skipped"
+    );
+    if (convertable.length === 0) return;
+    const allSettled = convertable.every((f) => f.status === "done" || f.status === "failed");
+    if (allSettled) {
       setTimeout(onDone, 600);
     }
-  }, [files, started]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [files, started]); // onDone is stable — intentionally omitted
 
   const handleCancel = async () => {
     setCancelled(true);
