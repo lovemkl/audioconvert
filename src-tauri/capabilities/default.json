@@ -19,13 +19,13 @@
     "fs:allow-stat",
     "fs:allow-exists",
     "fs:allow-rename",
-    "fs:scope-app-data-recursive",
+    "fs:scope-appdata-recursive",
     "fs:scope-home-recursive",
 
     "shell:allow-open",
 
     "notification:default",
-    "notification:allow-send-notification",
+    "notification:allow-notify",
     "notification:allow-request-permission",
     "notification:allow-is-permission-granted"
   ]
