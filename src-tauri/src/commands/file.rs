@@ -10,7 +10,7 @@ const AUDIO_EXTENSIONS: &[&str] = &[
     "mp3", "aac", "m4a", "ogg", "opus", "wav", "flac", "alac", "aiff", "aif",
     "wma", "ape", "dsf", "dff", "dsd",
     // Tier 2
-    "oma", "at3", "at9", "wv", "tta", "spx", "amr", "ac3", "dts", "mp2",
+    "oma", "at3", "at9", "wv", "tta", "spx", "amr", "awb", "ac3", "dts", "mp2",
     "mpc", "caf", "gsm", "ra", "rm",
     // Tier 3 (plugin)
     "mgg", "mgg1", "mggl", "mflac", "mflac0",
