@@ -78,6 +78,38 @@
       }
     },
     {
+      "path": "pages/itinerary/builder",
+      "style": {
+        "navigationBarTitleText": "定制行程",
+        "navigationBarBackgroundColor": "#4A7C59",
+        "navigationBarTextStyle": "white"
+      }
+    },
+    {
+      "path": "pages/itinerary/detail",
+      "style": {
+        "navigationBarTitleText": "我的行程",
+        "navigationBarBackgroundColor": "#4A7C59",
+        "navigationBarTextStyle": "white"
+      }
+    },
+    {
+      "path": "pages/ugc/publish",
+      "style": {
+        "navigationBarTitleText": "发布游记",
+        "navigationBarBackgroundColor": "#4A7C59",
+        "navigationBarTextStyle": "white"
+      }
+    },
+    {
+      "path": "pages/ugc/detail",
+      "style": {
+        "navigationBarTitleText": "游记详情",
+        "navigationBarBackgroundColor": "#4A7C59",
+        "navigationBarTextStyle": "white"
+      }
+    },
+    {
       "path": "pages/search/index",
       "style": {
         "navigationBarTitleText": "搜索",
