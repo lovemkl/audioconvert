@@ -1,0 +1,168 @@
+{
+  "pages": [
+    {
+      "path": "pages/index/index",
+      "style": {
+        "navigationBarTitleText": "秋城生活指南",
+        "navigationBarBackgroundColor": "#4A7C59",
+        "navigationBarTextStyle": "white",
+        "backgroundColor": "#F7F5F0"
+      }
+    },
+    {
+      "path": "pages/district/index",
+      "style": {
+        "navigationBarTitleText": "探索区县",
+        "navigationBarBackgroundColor": "#4A7C59",
+        "navigationBarTextStyle": "white",
+        "backgroundColor": "#F7F5F0"
+      }
+    },
+    {
+      "path": "pages/district/detail",
+      "style": {
+        "navigationBarTitleText": "",
+        "navigationBarBackgroundColor": "#4A7C59",
+        "navigationBarTextStyle": "white",
+        "backgroundColor": "#F7F5F0"
+      }
+    },
+    {
+      "path": "pages/resort/index",
+      "style": {
+        "navigationBarTitleText": "旅居专区",
+        "navigationBarBackgroundColor": "#4A7C59",
+        "navigationBarTextStyle": "white",
+        "backgroundColor": "#F7F5F0"
+      }
+    },
+    {
+      "path": "pages/resort/climate",
+      "style": {
+        "navigationBarTitleText": "避暑选地",
+        "navigationBarBackgroundColor": "#4A7C59",
+        "navigationBarTextStyle": "white"
+      }
+    },
+    {
+      "path": "pages/resort/guide",
+      "style": {
+        "navigationBarTitleText": "长住攻略",
+        "navigationBarBackgroundColor": "#4A7C59",
+        "navigationBarTextStyle": "white"
+      }
+    },
+    {
+      "path": "pages/resort/rental",
+      "style": {
+        "navigationBarTitleText": "租房参考",
+        "navigationBarBackgroundColor": "#4A7C59",
+        "navigationBarTextStyle": "white"
+      }
+    },
+    {
+      "path": "pages/driving/index",
+      "style": {
+        "navigationBarTitleText": "自驾路线",
+        "navigationBarBackgroundColor": "#4A7C59",
+        "navigationBarTextStyle": "white",
+        "backgroundColor": "#F7F5F0"
+      }
+    },
+    {
+      "path": "pages/driving/detail",
+      "style": {
+        "navigationBarTitleText": "路线详情",
+        "navigationBarBackgroundColor": "#4A7C59",
+        "navigationBarTextStyle": "white"
+      }
+    },
+    {
+      "path": "pages/itinerary/builder",
+      "style": {
+        "navigationBarTitleText": "定制行程",
+        "navigationBarBackgroundColor": "#4A7C59",
+        "navigationBarTextStyle": "white"
+      }
+    },
+    {
+      "path": "pages/itinerary/detail",
+      "style": {
+        "navigationBarTitleText": "我的行程",
+        "navigationBarBackgroundColor": "#4A7C59",
+        "navigationBarTextStyle": "white"
+      }
+    },
+    {
+      "path": "pages/ugc/publish",
+      "style": {
+        "navigationBarTitleText": "发布游记",
+        "navigationBarBackgroundColor": "#4A7C59",
+        "navigationBarTextStyle": "white"
+      }
+    },
+    {
+      "path": "pages/ugc/detail",
+      "style": {
+        "navigationBarTitleText": "游记详情",
+        "navigationBarBackgroundColor": "#4A7C59",
+        "navigationBarTextStyle": "white"
+      }
+    },
+    {
+      "path": "pages/search/index",
+      "style": {
+        "navigationBarTitleText": "搜索",
+        "navigationBarBackgroundColor": "#4A7C59",
+        "navigationBarTextStyle": "white"
+      }
+    },
+    {
+      "path": "pages/profile/index",
+      "style": {
+        "navigationBarTitleText": "我的",
+        "navigationBarBackgroundColor": "#4A7C59",
+        "navigationBarTextStyle": "white"
+      }
+    }
+  ],
+  "tabBar": {
+    "color": "#999999",
+    "selectedColor": "#4A7C59",
+    "borderStyle": "black",
+    "backgroundColor": "#ffffff",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页",
+        "iconPath": "static/tabs/home.png",
+        "selectedIconPath": "static/tabs/home-active.png"
+      },
+      {
+        "pagePath": "pages/district/index",
+        "text": "区县",
+        "iconPath": "static/tabs/map.png",
+        "selectedIconPath": "static/tabs/map-active.png"
+      },
+      {
+        "pagePath": "pages/resort/index",
+        "text": "旅居",
+        "iconPath": "static/tabs/resort.png",
+        "selectedIconPath": "static/tabs/resort-active.png"
+      },
+      {
+        "pagePath": "pages/driving/index",
+        "text": "自驾",
+        "iconPath": "static/tabs/car.png",
+        "selectedIconPath": "static/tabs/car-active.png"
+      }
+    ]
+  },
+  "globalStyle": {
+    "navigationBarTextStyle": "white",
+    "navigationBarBackgroundColor": "#4A7C59",
+    "backgroundColor": "#F7F5F0",
+    "backgroundColorTop": "#F7F5F0"
+  },
+  "uniIdRouter": {}
+}

@@ -1,0 +1,61 @@
+{
+  "name": "秋城生活指南",
+  "appid": "__UNI__QIUCHENG",
+  "description": "昭通11区县深度旅行指南，秋城避暑旅居首选",
+  "versionName": "1.0.0",
+  "versionCode": "100",
+  "transformPx": false,
+  "mp-weixin": {
+    "appid": "",
+    "setting": {
+      "urlCheck": false,
+      "es6": true,
+      "enhance": true,
+      "postcss": true,
+      "preloadBackgroundData": false,
+      "minified": true,
+      "newFeature": true,
+      "coverView": true,
+      "nodeModules": false,
+      "autoAudits": false,
+      "showShadowRootInWxmlPanel": true,
+      "scopeDataCheck": false,
+      "uglifyFileName": false,
+      "checkInvalidKey": true,
+      "checkSiteMap": true,
+      "uploadWithSourceMap": true,
+      "compileHotReLoad": false,
+      "useMultiFrameRuntime": true,
+      "useApiHook": true,
+      "useApiHostProcess": true,
+      "babelSetting": {
+        "ignore": [],
+        "disablePlugins": [],
+        "outputPath": ""
+      },
+      "bundle": false,
+      "useIsolateContext": true,
+      "useCompilerPlugins": false,
+      "convertEs6": false,
+      "lazyloadPlaceholderEnable": false,
+      "useStaticServer": false,
+      "packNpmManually": false,
+      "packNpmRelationList": [],
+      "minifyWXSS": true,
+      "disableUseStrict": false,
+      "minifyWXML": true,
+      "showES6CompileOption": false,
+      "useCompilerPlugins": false
+    },
+    "usingComponents": true,
+    "cloudfunctionRoot": "cloudfunctions/",
+    "permission": {
+      "scope.userLocation": {
+        "desc": "获取位置信息，用于附近景点推荐"
+      }
+    },
+    "requiredPrivateInfos": ["getLocation"],
+    "navigateToMiniProgramAppIdList": []
+  },
+  "vueVersion": "3"
+}
